@@ -1,33 +1,43 @@
 <!doctype html>
-<html class="no-js" lang="">
-
+<html class="no-js" lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
-  <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="">
-
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
-  <meta property="og:image:alt" content="">
-
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.png">
-
-  <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#fafafa">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Markdown Table to Image Converter</title>
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="description" content="Convert Markdown tables to downloadable images easily in your browser.">
+    <meta property="og:title" content="Markdown Table to Image Converter">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-website-url.com">
+    <meta property="og:image" content="https://your-website-url.com/og-image.jpg">
+    <meta property="og:image:alt" content="Markdown Table to Image Converter interface">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#fafafa">
 </head>
-
 <body>
-
-  <!-- Add your site or application content here -->
-  <p>Hello world! This is HTML5 Boilerplate.</p>
-  <script src="js/app.js"></script>
-
+    <header>
+        <h1>Markdown Table to Image Converter</h1>
+    </header>
+    <main>
+        <section id="input-section">
+            <h2>Input your Markdown Table</h2>
+            <textarea id="markdownInput" placeholder="Paste your Markdown table here..."></textarea>
+            <button id="generateBtn">Generate Image</button>
+        </section>
+        <section id="output-section">
+            <h2>Generated Image</h2>
+            <div id="canvasContainer">
+                <canvas id="canvas"></canvas>
+            </div>
+            <a id="downloadLink" class="button" style="display: none;">Download Image</a>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Markdown Table to Image Converter. All rights reserved.</p>
+    </footer>
+    <script src="js/app.js"></script>
 </body>
-
 </html>
