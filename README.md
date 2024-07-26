@@ -70,9 +70,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_twitter) - email@example.com
+Fahad Murtaza - info@fahdmurtaza.com
 
-Project Link: [https://github.com/your-username/markdown-table-imagifier](https://github.com/your-username/markdown-table-imagifier)
+Project Link: [https://github.com/fahdi/markdown-table-imagifier](https://github.com/fahdi/markdown-table-imagifier)
 
 ## Acknowledgments
 
@@ -92,7 +92,3 @@ This README provides:
 8. License information
 9. Contact information
 10. Acknowledgments
-
-Remember to replace placeholders like `your-username`, `your-deployed-url-here`, `Your Name`, `[@your_twitter]`, and `email@example.com` with your actual information.
-
-You may also want to add screenshots of the tool in action, which can be very helpful for users to understand what your project does at a glance.
