@@ -19,8 +19,8 @@ function generateImage() {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    const cellWidth = 150;
-    const cellHeight = 40;
+    const cellWidth = 250; // Increased cell width
+    const cellHeight = 80; // Increased cell height
     const padding = 10;
 
     canvas.width = cellWidth * headers.length;
@@ -45,21 +45,17 @@ function drawTable(ctx, headers, rows, cellWidth, cellHeight, padding) {
 
     ctx.fillStyle = 'black';
     ctx.font = '14px Arial';
-    ctx.textBaseline = 'middle';
+    ctx.textBaseline = 'top'; // Changed to 'top' to avoid overlapping
 
     // Draw headers
     headers.forEach((header, index) => {
-        const x = index * cellWidth + padding;
-        const y = cellHeight / 2;
-        ctx.fillText(header, x, y);
+        drawWrappedText(ctx, header, index * cellWidth + padding, padding, cellWidth, cellHeight);
     });
 
     // Draw rows
     rows.forEach((row, rowIndex) => {
         row.forEach((cell, cellIndex) => {
-            const x = cellIndex * cellWidth + padding;
-            const y = (rowIndex + 1.5) * cellHeight;
-            ctx.fillText(cell, x, y);
+            drawWrappedText(ctx, cell, cellIndex * cellWidth + padding, (rowIndex + 1) * cellHeight + padding, cellWidth, cellHeight);
         });
     });
 
@@ -74,6 +70,33 @@ function drawTable(ctx, headers, rows, cellWidth, cellHeight, padding) {
         ctx.lineTo(ctx.canvas.width, i * cellHeight);
     }
     ctx.stroke();
+}
+
+function drawWrappedText(ctx, text, x, y, cellWidth, cellHeight) {
+    const words = text.split(' ');
+    let line = '';
+    const maxWidth = cellWidth - 2 * 10; // Account for padding
+    const lineHeight = 18; // Line height (adjust as needed)
+    let currentY = y;
+
+    for (let i = 0; i < words.length; i++) {
+        const testLine = line + words[i] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth) {
+            ctx.fillText(line, x, currentY);
+            line = words[i] + ' ';
+            currentY += lineHeight;
+            // Ensure text fits within cell height
+            if (currentY > y + cellHeight - lineHeight) {
+                // Draw truncated text
+                ctx.fillText('...', x, currentY); // Indicate truncation
+                break;
+            }
+        } else {
+            line = testLine;
+        }
+    }
+    ctx.fillText(line, x, currentY);
 }
 
 function enableDownload(canvas) {
