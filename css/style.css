@@ -30,7 +30,7 @@ header, main, footer {
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 h1, h2 {
@@ -201,4 +201,12 @@ h1, h2 {
 .table-theme-colorful th {
   background-color: #4caf50;
   color: white;
+}
+
+/* Dark theme heading styles */
+.table-theme-dark h1,
+.table-theme-dark h2,
+.table-theme-dark h3,
+.table-theme-dark h4 {
+  color: #e0e0e0;
 }
