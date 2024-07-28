@@ -1,84 +1,137 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-    const generateBtn = document.getElementById('generateBtn');
-    generateBtn.addEventListener('click', generateImage);
+  const markdownInput = document.getElementById('markdownInput');
+  const themeSelect = document.getElementById('themeSelect');
+
+  markdownInput.addEventListener('input', generateImage);
+  themeSelect.addEventListener('change', generateImage);
 });
 
 function generateImage() {
-    const markdown = document.getElementById('markdownInput').value;
-    if (!markdown.trim()) {
-        alert('Please enter a Markdown table.');
-        return;
-    }
+  const markdown = document.getElementById('markdownInput').value;
+  if (!markdown.trim()) {
+    clearCanvas();
+    return;
+  }
 
-    const { headers, rows } = parseMarkdownTable(markdown);
-    if (!headers.length || !rows.length) {
-        alert('Invalid Markdown table format. Please check your input.');
-        return;
-    }
+  const { headers, rows } = parseMarkdownTable(markdown);
+  if (!headers.length || !rows.length) {
+    clearCanvas();
+    return;
+  }
 
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
 
-    const cellWidth = 150;
-    const cellHeight = 40;
-    const padding = 10;
+  const cellWidth = 150;
+  const cellHeight = 40;
+  const padding = 10;
+  const margin = 20;
 
-    canvas.width = cellWidth * headers.length;
-    canvas.height = cellHeight * (rows.length + 1);
+  canvas.width = cellWidth * headers.length + margin * 2;
+  canvas.height = cellHeight * (rows.length + 1) + margin * 2;
 
-    drawTable(ctx, headers, rows, cellWidth, cellHeight, padding);
-    enableDownload(canvas);
+  const theme = document.getElementById('themeSelect').value;
+  drawTable(ctx, headers, rows, cellWidth, cellHeight, padding, margin, theme);
+  enableDownload(canvas);
+}
+
+function clearCanvas() {
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById('downloadLink').style.display = 'none';
 }
 
 function parseMarkdownTable(markdown) {
-    const lines = markdown.trim().split('\n');
-    const headers = lines[0].split('|').filter(cell => cell.trim() !== '').map(cell => cell.trim());
-    const rows = lines.slice(2).map(line =>
-        line.split('|').filter(cell => cell.trim() !== '').map(cell => cell.trim())
-    );
-    return { headers, rows };
+  const lines = markdown.trim().split('\n');
+  const headers = lines[0].split('|').filter(cell => cell.trim() !== '').map(cell => cell.trim());
+  const rows = lines.slice(2).map(line =>
+    line.split('|').filter(cell => cell.trim() !== '').map(cell => cell.trim())
+  );
+  return { headers, rows };
 }
 
-function drawTable(ctx, headers, rows, cellWidth, cellHeight, padding) {
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+function drawTable(ctx, headers, rows, cellWidth, cellHeight, padding, margin, theme) {
+  const colors = getThemeColors(theme);
 
-    ctx.fillStyle = 'black';
-    ctx.font = '14px Arial';
-    ctx.textBaseline = 'middle';
+  ctx.fillStyle = colors.background;
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    // Draw headers
-    headers.forEach((header, index) => {
-        const x = index * cellWidth + padding;
-        const y = cellHeight / 2;
-        ctx.fillText(header, x, y);
+  ctx.fillStyle = colors.text;
+  ctx.font = '14px Arial';
+  ctx.textBaseline = 'middle';
+
+  // Draw headers
+  headers.forEach((header, index) => {
+    const x = index * cellWidth + padding + margin;
+    const y = cellHeight / 2 + margin;
+    ctx.fillStyle = colors.headerBackground;
+    ctx.fillRect(x - padding, margin, cellWidth, cellHeight);
+    ctx.fillStyle = colors.headerText;
+    ctx.fillText(header, x, y);
+  });
+
+  // Draw rows
+  rows.forEach((row, rowIndex) => {
+    row.forEach((cell, cellIndex) => {
+      const x = cellIndex * cellWidth + padding + margin;
+      const y = (rowIndex + 1.5) * cellHeight + margin;
+      ctx.fillStyle = colors.cellBackground;
+      ctx.fillRect(x - padding, (rowIndex + 1) * cellHeight + margin, cellWidth, cellHeight);
+      ctx.fillStyle = colors.text;
+      ctx.fillText(cell, x, y);
     });
+  });
 
-    // Draw rows
-    rows.forEach((row, rowIndex) => {
-        row.forEach((cell, cellIndex) => {
-            const x = cellIndex * cellWidth + padding;
-            const y = (rowIndex + 1.5) * cellHeight;
-            ctx.fillText(cell, x, y);
-        });
-    });
+  // Draw grid
+  ctx.strokeStyle = colors.border;
+  ctx.beginPath();
+  for (let i = 0; i <= headers.length; i++) {
+    ctx.moveTo(i * cellWidth + margin, margin);
+    ctx.lineTo(i * cellWidth + margin, ctx.canvas.height - margin);
+  }
+  for (let i = 0; i <= rows.length + 1; i++) {
+    ctx.moveTo(margin, i * cellHeight + margin);
+    ctx.lineTo(ctx.canvas.width - margin, i * cellHeight + margin);
+  }
+  ctx.stroke();
+}
 
-    // Draw grid
-    ctx.beginPath();
-    for (let i = 0; i <= headers.length; i++) {
-        ctx.moveTo(i * cellWidth, 0);
-        ctx.lineTo(i * cellWidth, ctx.canvas.height);
-    }
-    for (let i = 0; i <= rows.length + 1; i++) {
-        ctx.moveTo(0, i * cellHeight);
-        ctx.lineTo(ctx.canvas.width, i * cellHeight);
-    }
-    ctx.stroke();
+function getThemeColors(theme) {
+  switch (theme) {
+    case 'dark':
+      return {
+        background: '#333',
+        text: '#fff',
+        headerBackground: '#555',
+        headerText: '#fff',
+        cellBackground: '#444',
+        border: '#666'
+      };
+    case 'colorful':
+      return {
+        background: '#f0f8ff',
+        text: '#333',
+        headerBackground: '#4caf50',
+        headerText: '#fff',
+        cellBackground: '#e6f3ff',
+        border: '#2196f3'
+      };
+    default:
+      return {
+        background: '#fff',
+        text: '#333',
+        headerBackground: '#f2f2f2',
+        headerText: '#333',
+        cellBackground: '#fff',
+        border: '#ddd'
+      };
+  }
 }
 
 function enableDownload(canvas) {
-    const downloadLink = document.getElementById('downloadLink');
-    downloadLink.href = canvas.toDataURL('image/png');
-    downloadLink.download = 'markdown_table.png';
-    downloadLink.style.display = 'inline-block';
+  const downloadLink = document.getElementById('downloadLink');
+  downloadLink.href = canvas.toDataURL('image/png');
+  downloadLink.download = 'markdown_table.png';
+  downloadLink.style.display = 'inline-block';
 }

@@ -48,7 +48,7 @@ h1, h2 {
 }
 
 /* Buttons */
-.button, button {
+.button {
   display: inline-block;
   padding: 10px 20px;
   background-color: #3498db;
@@ -61,7 +61,7 @@ h1, h2 {
   transition: background-color 0.3s ease;
 }
 
-.button:hover, button:hover {
+.button:hover {
   background-color: #2980b9;
 }
 
@@ -76,19 +76,14 @@ h1, h2 {
   background-color: white;
 }
 
+/* Theme selector */
+.theme-selector {
+  margin-top: 10px;
+}
+
 /* Helper classes */
 .hidden {
   display: none !important;
-}
-
-.clearfix::before,
-.clearfix::after {
-  content: "";
-  display: table;
-}
-
-.clearfix::after {
-  clear: both;
 }
 
 /* Print styles */
@@ -110,7 +105,7 @@ h1, h2 {
     overflow: visible;
   }
 
-  #generateBtn, #downloadLink {
+  #downloadLink, .theme-selector {
     display: none;
   }
 }
