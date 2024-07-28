@@ -120,3 +120,85 @@ h1, h2 {
     padding: 10px;
   }
 }
+
+/* Add these styles to your style.css file */
+
+.table-theme-default,
+.table-theme-dark,
+.table-theme-colorful {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.table-theme-default table,
+.table-theme-dark table,
+.table-theme-colorful table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table-theme-default th,
+.table-theme-default td,
+.table-theme-dark th,
+.table-theme-dark td,
+.table-theme-colorful th,
+.table-theme-colorful td {
+  border: 1px solid;
+  padding: 8px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table-theme-default img,
+.table-theme-dark img,
+.table-theme-colorful img {
+  max-height: 20px;
+  max-width: 30px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+/* Default theme */
+.table-theme-default {
+  color: #333;
+}
+
+.table-theme-default th,
+.table-theme-default td {
+  border-color: #ddd;
+}
+
+.table-theme-default th {
+  background-color: #f2f2f2;
+}
+
+/* Dark theme */
+.table-theme-dark {
+  color: white;
+  background-color: #333;
+}
+
+.table-theme-dark th,
+.table-theme-dark td {
+  border-color: #555;
+}
+
+.table-theme-dark th {
+  background-color: #444;
+}
+
+/* Colorful theme */
+.table-theme-colorful {
+  color: #333;
+  background-color: #f0f8ff;
+}
+
+.table-theme-colorful th,
+.table-theme-colorful td {
+  border-color: #2196f3;
+}
+
+.table-theme-colorful th {
+  background-color: #4caf50;
+  color: white;
+}
