@@ -40,6 +40,33 @@ Input Markdown:
 | JavaScript | 1995  | Web Dev  |
 ```
 
+```angular2html
+| Countries    | Population      | No. of Athletes |
+|--------------|-----------------|-----------------|
+| ![Pakistan](https://upload.wikimedia.org/wikipedia/commons/3/32/Flag_of_Pakistan.svg) Pakistan    | 245,446,128     | 7               |
+| ![Bangladesh](https://upload.wikimedia.org/wikipedia/commons/f/f9/Flag_of_Bangladesh.svg) Bangladesh  | 174,797,237     | 5               |
+| ![Indonesia](https://upload.wikimedia.org/wikipedia/commons/9/9f/Flag_of_Indonesia.svg) Indonesia   | 279,924,794     | 29              |
+| ![Nigeria](https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg) Nigeria      | 229,408,040     | 88              |
+| ![India](https://upload.wikimedia.org/wikipedia/commons/4/41/Flag_of_India.svg) India        | 1,442,445,924   | 117             |
+| ![Italy](https://upload.wikimedia.org/wikipedia/commons/0/03/Flag_of_Italy.svg) Italy        | 58,687,046      | 403             |
+| ![Luxembourg](https://upload.wikimedia.org/wikipedia/commons/d/da/Flag_of_Luxembourg.svg) Luxembourg  | 661,968         | 14              |
+| ![Latvia](https://upload.wikimedia.org/wikipedia/commons/8/84/Flag_of_Latvia.svg) Latvia       | 1,808,920       | 29              |
+| ![Lithuania](https://upload.wikimedia.org/wikipedia/commons/1/11/Flag_of_Lithuania.svg) Lithuania   | 2,691,200       | 50              |
+| ![Croatia](https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Croatia.svg) Croatia     | 3,985,238       | 73              |
+```
+| Countries    | Population      | No. of Athletes |
+|--------------|-----------------|-----------------|
+| ![Pakistan](https://upload.wikimedia.org/wikipedia/commons/3/32/Flag_of_Pakistan.svg) Pakistan    | 245,446,128     | 7               |
+| ![Bangladesh](https://upload.wikimedia.org/wikipedia/commons/f/f9/Flag_of_Bangladesh.svg) Bangladesh  | 174,797,237     | 5               |
+| ![Indonesia](https://upload.wikimedia.org/wikipedia/commons/9/9f/Flag_of_Indonesia.svg) Indonesia   | 279,924,794     | 29              |
+| ![Nigeria](https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg) Nigeria      | 229,408,040     | 88              |
+| ![India](https://upload.wikimedia.org/wikipedia/commons/4/41/Flag_of_India.svg) India        | 1,442,445,924   | 117             |
+| ![Italy](https://upload.wikimedia.org/wikipedia/commons/0/03/Flag_of_Italy.svg) Italy        | 58,687,046      | 403             |
+| ![Luxembourg](https://upload.wikimedia.org/wikipedia/commons/d/da/Flag_of_Luxembourg.svg) Luxembourg  | 661,968         | 14              |
+| ![Latvia](https://upload.wikimedia.org/wikipedia/commons/8/84/Flag_of_Latvia.svg) Latvia       | 1,808,920       | 29              |
+| ![Lithuania](https://upload.wikimedia.org/wikipedia/commons/1/11/Flag_of_Lithuania.svg) Lithuania   | 2,691,200       | 50              |
+| ![Croatia](https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Croatia.svg) Croatia     | 3,985,238       | 73              |
+
 Output: An image file containing a formatted table.
 
 ## Development

@@ -33,7 +33,13 @@ function generateImage(){
   const cellWidths = headers.map((header, index) => {
     let maxWidth = ctx.measureText(header).width;
     rows.forEach(row => {
-      const cellWidth = ctx.measureText(row[index]).width;
+      const cell = row[index];
+      let cellWidth;
+      if (cell.type === 'text') {
+        cellWidth = ctx.measureText(cell.content).width;
+      } else if (cell.type === 'image') {
+        cellWidth = ctx.measureText(cell.alt).width + 30; // Add some extra width for the image
+      }
       maxWidth = Math.max(maxWidth, cellWidth);
     });
     return maxWidth + (cellPadding * 2);
@@ -47,7 +53,6 @@ function generateImage(){
 
   const theme = document.getElementById('themeSelect').value;
   drawTable(ctx, headers, rows, cellWidths, cellHeight, cellPadding, margin, theme);
-  enableDownload(canvas);
 }
 
 function clearCanvas(){
@@ -62,7 +67,14 @@ function parseMarkdownTable(markdown){
   const lines = markdown.trim().split('\n');
   const headers = lines[0].split('|').filter(cell => cell.trim() !== '').map(cell => cell.trim());
   const rows = lines.slice(2).map(line =>
-    line.split('|').filter(cell => cell.trim() !== '').map(cell => cell.trim())
+    line.split('|').filter(cell => cell.trim() !== '').map(cell => {
+      const trimmed = cell.trim();
+      const imageMatch = trimmed.match(/!\[([^\]]*)\]\(([^)]+)\)/);
+      return imageMatch ? { type: 'image', alt: imageMatch[1], src: imageMatch[2] } : {
+        type: 'text',
+        content: trimmed
+      };
+    })
   );
   return { headers, rows };
 }
@@ -70,50 +82,95 @@ function parseMarkdownTable(markdown){
 function drawTable(ctx, headers, rows, cellWidths, cellHeight, cellPadding, margin, theme){
   const colors = getThemeColors(theme);
 
+  // Fill background
   ctx.fillStyle = colors.background;
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
+  // Set text color
+  ctx.fillStyle = colors.text;
   ctx.font = '14px Arial';
   ctx.textBaseline = 'middle';
 
   let x = margin;
+  let y = margin;
+
   // Draw headers
+  ctx.fillStyle = colors.headerBackground;
+  ctx.fillRect(x, y, ctx.canvas.width - 2 * margin, cellHeight);
+  ctx.fillStyle = colors.headerText;
   headers.forEach((header, index) => {
-    const y = cellHeight / 2 + margin;
-    ctx.fillStyle = colors.headerBackground;
-    ctx.fillRect(x, margin, cellWidths[index], cellHeight);
-    ctx.fillStyle = colors.headerText;
-    ctx.fillText(header, x + cellPadding, y);
+    ctx.fillText(header, x + cellPadding, y + cellHeight / 2);
     x += cellWidths[index];
   });
 
   // Draw rows
-  rows.forEach((row, rowIndex) => {
+  y += cellHeight;
+  rows.forEach((row) => {
     x = margin;
+    ctx.fillStyle = colors.cellBackground;
+    ctx.fillRect(x, y, ctx.canvas.width - 2 * margin, cellHeight);
+    ctx.fillStyle = colors.text;
     row.forEach((cell, cellIndex) => {
-      const y = ((rowIndex + 1) * cellHeight) + (cellHeight / 2) + margin;
-      ctx.fillStyle = colors.cellBackground;
-      ctx.fillRect(x, (rowIndex + 1) * cellHeight + margin, cellWidths[cellIndex], cellHeight);
-      ctx.fillStyle = colors.text;
-      ctx.fillText(cell, x + cellPadding, y);
+      if (cell.type === 'text') {
+        ctx.fillText(cell.content, x + cellPadding, y + cellHeight / 2);
+      } else if (cell.type === 'image') {
+        loadImageWithRetry(cell.src, 3)
+          .then(img => {
+            const aspectRatio = img.width / img.height;
+            const drawHeight = cellHeight - cellPadding * 2;
+            const drawWidth = drawHeight * aspectRatio;
+            ctx.drawImage(img, x + cellPadding, y + cellPadding, drawWidth, drawHeight);
+          })
+          .catch(() => {
+            console.error('Failed to load image after retries:', cell.src);
+            ctx.fillText(cell.alt, x + cellPadding, y + cellHeight / 2);
+          });
+        // Draw country name immediately as a fallback
+        ctx.fillText(cell.alt, x + cellPadding, y + cellHeight / 2);
+      }
       x += cellWidths[cellIndex];
     });
+    y += cellHeight;
   });
 
   // Draw grid
   ctx.strokeStyle = colors.border;
   ctx.beginPath();
   x = margin;
-  for (let i = 0; i <= headers.length; i++) {
+  cellWidths.forEach(width => {
     ctx.moveTo(x, margin);
     ctx.lineTo(x, ctx.canvas.height - margin);
-    x += cellWidths[i] || 0;
-  }
+    x += width;
+  });
+  ctx.moveTo(x, margin);
+  ctx.lineTo(x, ctx.canvas.height - margin);
+
   for (let i = 0; i <= rows.length + 1; i++) {
-    ctx.moveTo(margin, i * cellHeight + margin);
-    ctx.lineTo(ctx.canvas.width - margin, i * cellHeight + margin);
+    ctx.moveTo(margin, margin + i * cellHeight);
+    ctx.lineTo(ctx.canvas.width - margin, margin + i * cellHeight);
   }
   ctx.stroke();
+
+  // Enable download immediately
+  enableDownload(ctx.canvas);
+}
+
+function loadImageWithRetry(src, retries){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = (err) => {
+      if (retries === 0) {
+        reject(err);
+      } else {
+        setTimeout(() => {
+          loadImageWithRetry(src, retries - 1).then(resolve, reject);
+        }, 1000);
+      }
+    };
+    img.src = src;
+  });
 }
 
 function getThemeColors(theme){
