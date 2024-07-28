@@ -23,7 +23,7 @@ A browser-based tool that converts Markdown tables into downloadable PNG images.
 
 ### Usage
 
-1. Visit the [Markdown Table Imagifier website](your-deployed-url-here)
+1. Visit the [Markdown Table Imagifier website](https://fahdi.github.io/markdown-table-imagifier/)
 2. Paste your Markdown table into the input area
 3. Click "Generate Image"
 4. Preview the generated table image
