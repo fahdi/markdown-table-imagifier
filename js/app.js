@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   copyImageBtn.addEventListener('click', copyImageToClipboard);
 });
 
-function generateImage() {
+function generateImage(){
   const markdown = document.getElementById('markdownInput').value;
   if (!markdown.trim()) {
     clearCanvas();
@@ -24,27 +24,41 @@ function generateImage() {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
-  const cellWidth = 150;
-  const cellHeight = 40;
-  const padding = 10;
-  const margin = 20;
+  // Set font before measuring text
+  ctx.font = '14px Arial';
 
-  canvas.width = cellWidth * headers.length + margin * 2;
-  canvas.height = cellHeight * (rows.length + 1) + margin * 2;
+  // Calculate cell dimensions based on content
+  const cellPadding = 10;
+  const margin = 20;
+  const cellWidths = headers.map((header, index) => {
+    let maxWidth = ctx.measureText(header).width;
+    rows.forEach(row => {
+      const cellWidth = ctx.measureText(row[index]).width;
+      maxWidth = Math.max(maxWidth, cellWidth);
+    });
+    return maxWidth + (cellPadding * 2);
+  });
+
+  const cellHeight = 40;
+
+  // Calculate canvas dimensions
+  canvas.width = cellWidths.reduce((sum, width) => sum + width, 0) + (margin * 2);
+  canvas.height = (cellHeight * (rows.length + 1)) + (margin * 2);
 
   const theme = document.getElementById('themeSelect').value;
-  drawTable(ctx, headers, rows, cellWidth, cellHeight, padding, margin, theme);
+  drawTable(ctx, headers, rows, cellWidths, cellHeight, cellPadding, margin, theme);
   enableDownload(canvas);
 }
 
-function clearCanvas() {
+function clearCanvas(){
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   document.getElementById('downloadLink').style.display = 'none';
+  document.getElementById('copyImageBtn').style.display = 'none';
 }
 
-function parseMarkdownTable(markdown) {
+function parseMarkdownTable(markdown){
   const lines = markdown.trim().split('\n');
   const headers = lines[0].split('|').filter(cell => cell.trim() !== '').map(cell => cell.trim());
   const rows = lines.slice(2).map(line =>
@@ -53,44 +67,47 @@ function parseMarkdownTable(markdown) {
   return { headers, rows };
 }
 
-function drawTable(ctx, headers, rows, cellWidth, cellHeight, padding, margin, theme) {
+function drawTable(ctx, headers, rows, cellWidths, cellHeight, cellPadding, margin, theme){
   const colors = getThemeColors(theme);
 
   ctx.fillStyle = colors.background;
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  ctx.fillStyle = colors.text;
   ctx.font = '14px Arial';
   ctx.textBaseline = 'middle';
 
+  let x = margin;
   // Draw headers
   headers.forEach((header, index) => {
-    const x = index * cellWidth + padding + margin;
     const y = cellHeight / 2 + margin;
     ctx.fillStyle = colors.headerBackground;
-    ctx.fillRect(x - padding, margin, cellWidth, cellHeight);
+    ctx.fillRect(x, margin, cellWidths[index], cellHeight);
     ctx.fillStyle = colors.headerText;
-    ctx.fillText(header, x, y);
+    ctx.fillText(header, x + cellPadding, y);
+    x += cellWidths[index];
   });
 
   // Draw rows
   rows.forEach((row, rowIndex) => {
+    x = margin;
     row.forEach((cell, cellIndex) => {
-      const x = cellIndex * cellWidth + padding + margin;
-      const y = (rowIndex + 1.5) * cellHeight + margin;
+      const y = ((rowIndex + 1) * cellHeight) + (cellHeight / 2) + margin;
       ctx.fillStyle = colors.cellBackground;
-      ctx.fillRect(x - padding, (rowIndex + 1) * cellHeight + margin, cellWidth, cellHeight);
+      ctx.fillRect(x, (rowIndex + 1) * cellHeight + margin, cellWidths[cellIndex], cellHeight);
       ctx.fillStyle = colors.text;
-      ctx.fillText(cell, x, y);
+      ctx.fillText(cell, x + cellPadding, y);
+      x += cellWidths[cellIndex];
     });
   });
 
   // Draw grid
   ctx.strokeStyle = colors.border;
   ctx.beginPath();
+  x = margin;
   for (let i = 0; i <= headers.length; i++) {
-    ctx.moveTo(i * cellWidth + margin, margin);
-    ctx.lineTo(i * cellWidth + margin, ctx.canvas.height - margin);
+    ctx.moveTo(x, margin);
+    ctx.lineTo(x, ctx.canvas.height - margin);
+    x += cellWidths[i] || 0;
   }
   for (let i = 0; i <= rows.length + 1; i++) {
     ctx.moveTo(margin, i * cellHeight + margin);
@@ -99,7 +116,7 @@ function drawTable(ctx, headers, rows, cellWidth, cellHeight, padding, margin, t
   ctx.stroke();
 }
 
-function getThemeColors(theme) {
+function getThemeColors(theme){
   switch (theme) {
     case 'dark':
       return {
@@ -131,7 +148,7 @@ function getThemeColors(theme) {
   }
 }
 
-function enableDownload(canvas) {
+function enableDownload(canvas){
   const downloadLink = document.getElementById('downloadLink');
   const copyImageBtn = document.getElementById('copyImageBtn');
   downloadLink.href = canvas.toDataURL('image/png');
@@ -140,7 +157,7 @@ function enableDownload(canvas) {
   copyImageBtn.style.display = 'inline-block';
 }
 
-async function copyImageToClipboard() {
+async function copyImageToClipboard(){
   const canvas = document.getElementById('canvas');
   canvas.toBlob(async (blob) => {
     try {
