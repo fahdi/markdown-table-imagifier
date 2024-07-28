@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', (event) => {
   const markdownInput = document.getElementById('markdownInput');
   const themeSelect = document.getElementById('themeSelect');
+  const copyImageBtn = document.getElementById('copyImageBtn');
 
   markdownInput.addEventListener('input', generateImage);
   themeSelect.addEventListener('change', generateImage);
+  copyImageBtn.addEventListener('click', copyImageToClipboard);
 });
 
 function generateImage() {
@@ -131,7 +133,26 @@ function getThemeColors(theme) {
 
 function enableDownload(canvas) {
   const downloadLink = document.getElementById('downloadLink');
+  const copyImageBtn = document.getElementById('copyImageBtn');
   downloadLink.href = canvas.toDataURL('image/png');
   downloadLink.download = 'markdown_table.png';
   downloadLink.style.display = 'inline-block';
+  copyImageBtn.style.display = 'inline-block';
+}
+
+async function copyImageToClipboard() {
+  const canvas = document.getElementById('canvas');
+  canvas.toBlob(async (blob) => {
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'image/png': blob
+        })
+      ]);
+      alert('Image copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy image: ', err);
+      alert('Failed to copy image. Your browser might not support this feature.');
+    }
+  }, 'image/png');
 }
