@@ -3,10 +3,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
   const markdownInput = document.getElementById('markdownInput');
   const themeSelect = document.getElementById('themeSelect');
   const copyImageBtn = document.getElementById('copyImageBtn');
+  const clearBtn = document.getElementById('clearBtn'); 
 
   generateBtn.addEventListener('click', generateImage);
   copyImageBtn.addEventListener('click', copyImageToClipboard);
+  clearBtn.addEventListener('click', clearAllInput);
 });
+
+function clearAllInput() {
+  document.getElementById('markdownInput').value = '';
+  document.getElementById('themeSelect').value = 'default'; // Reset to default
+  clearCanvas();
+}
 
 function generateImage(){
   const markdown = document.getElementById('markdownInput').value;
