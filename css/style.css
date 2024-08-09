@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 /* Base styles */
 html {
   color: #222;
@@ -25,7 +29,9 @@ textarea {
 }
 
 /* Layout elements */
-header, main, footer {
+header,
+main,
+footer {
   background-color: #fff;
   padding: 20px;
   margin-bottom: 20px;
@@ -33,7 +39,8 @@ header, main, footer {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-h1, h2 {
+h1,
+h2 {
   color: #2c3e50;
 }
 
@@ -101,7 +108,6 @@ h1, h2 {
   display: none !important;
 }
 
-
 /* Print styles */
 @media print {
   *,
@@ -121,7 +127,8 @@ h1, h2 {
     overflow: visible;
   }
 
-  #downloadLink, .theme-selector {
+  #downloadLink,
+  .theme-selector {
     display: none;
   }
 }
@@ -132,7 +139,9 @@ h1, h2 {
     padding: 10px;
   }
 
-  header, main, footer {
+  header,
+  main,
+  footer {
     padding: 10px;
   }
 }
