@@ -88,6 +88,10 @@ h2 {
 }
 
 /* Output section */
+#output-section {
+  display: none;
+}
+
 #canvasContainer {
   overflow-x: auto;
   margin-bottom: 20px;
