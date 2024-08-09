@@ -19,6 +19,10 @@ function clearAllInput() {
 function generateImage(){
   const markdown = document.getElementById('markdownInput').value;
   const theme = document.getElementById('themeSelect').value;
+  
+  document.getElementById('output-section').style.display = 'block';
+  const canvasContainer = document.getElementById('canvasContainer');
+
 
   if (!markdown.trim()) {
     clearCanvas();
@@ -33,15 +37,14 @@ function generateImage(){
   hiddenDiv.innerHTML = htmlTable;
   hiddenDiv.className = `table-theme-${theme}`;
   hiddenDiv.style.padding = '20px';
-  document.body.appendChild(hiddenDiv);
+  canvasContainer.appendChild(hiddenDiv);
 
   // Use html2canvas to convert the div to a canvas
   html2canvas(hiddenDiv, { useCORS: true }).then(canvas => {
     // Remove the hidden div
-    document.body.removeChild(hiddenDiv);
+    canvasContainer.removeChild(hiddenDiv);
 
     // Display the canvas and enable download/copy
-    const canvasContainer = document.getElementById('canvasContainer');
     canvasContainer.innerHTML = '';
     canvasContainer.appendChild(canvas);
     enableDownload(canvas);
